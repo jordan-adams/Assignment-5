@@ -1,0 +1,66 @@
+# Homework 5 Problem 2
+# Jordan Adams
+
+from math import cosh,tanh
+from pylab import show,plot,legend,xlabel,ylabel
+
+# Imports for required math and graph functions
+
+def f(x):
+    return 1.0+tanh(2.0*x)
+
+# User defined function that returns desired value    
+
+def derivative_f(x):                 
+    return 2.0/(cosh(2*x)*cosh(2*x))
+
+# User defined function for the Analytic method
+    
+def Df(x):
+    h=1e-5
+    # This value is from the book            
+    return (f(x+h/2)-f(x-h/2))/h
+    
+# User defined function for the Central difference method
+
+x=-2
+
+# Lower bound for concerned x values
+
+X=[]
+y1=[]
+y2=[]
+
+# Empty lists to be appended to
+
+while x<2:
+    X.append(x)
+    
+    y1.append(derivative_f(x))
+    # Analytic Method          
+    
+    y2.append(Df(x))
+    # Central Difference Method                
+    
+    x+=0.05
+
+# This while block appends values to the lists up to the upper
+# bound of desired x values
+
+plot(X,y1,"go",label="Analytic method")
+plot(X,y2,"g--", label="Central difference method")
+
+# Plots the values after they have been appended to the lists
+
+xlabel("x")
+ylabel("df / dx")
+
+# Appropriately labels both axes, ylabel spaced out to look better
+
+legend(bbox_to_anchor=(0, 1, 1, .1), loc=1,ncol=5, mode="expand", borderaxespad=-1)
+
+# Situates the legend for the graph above it and properly proportions it
+
+show()
+
+# Displays the graph
