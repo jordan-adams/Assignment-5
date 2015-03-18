@@ -1,0 +1,112 @@
+# Homework 5 Problem 1
+# Jordan Adams
+
+from math import sin,sqrt
+from numpy import array
+
+# Required imports for this program
+
+def f(x):
+    return sin(sqrt(100*x))*sin(sqrt(100*x))
+
+# User defined function that handles the inside of the integral
+
+a=0
+b=1
+# Limits of integration
+
+epsilon=1e-6
+
+N=1
+
+error=1
+# Value that will cause the loop to start evaluating
+
+h=(b-a)/N
+j=h*(0.5*f(a)+0.5*f(b))
+
+J=j
+
+"""print("For 1 slice the integral is approximately {0:.5f}".format(j))
+while fabs(error)>epsilon:
+    N*=2
+    # Causes the slices to go up in a squared fashion
+    h=(b-a)/N                           
+    s=0.0
+    for k in range(1,N,2):
+       s+=f(a+k*h)   
+    J=0.5*j+h*s
+         
+    error=(1.0/3.0)*(J-j)
+    # Error adjusted
+    print("For {0} slices the integral is approximately {1:.5f} with approximate error {2:.5e}".format(N,j,error))
+    j=J"""
+
+""" Part A outputs (Trapezoidal Rule)
+For 1 slice the integral is approximately 0.14798
+For 2 slices the integral is approximately 0.14798 with approximate error -2.46632e-02
+For 4 slices the integral is approximately 0.07399 with approximate error -1.23316e-02
+For 8 slices the integral is approximately 0.03699 with approximate error -6.16581e-03
+For 16 slices the integral is approximately 0.01850 with approximate error -3.08291e-03
+For 32 slices the integral is approximately 0.00925 with approximate error -1.54145e-03
+For 64 slices the integral is approximately 0.00462 with approximate error -7.70726e-04
+For 128 slices the integral is approximately 0.00231 with approximate error -3.85363e-04
+For 256 slices the integral is approximately 0.00116 with approximate error -1.92682e-04
+For 512 slices the integral is approximately 0.00058 with approximate error -9.63408e-05
+For 1024 slices the integral is approximately 0.00029 with approximate error -4.81704e-05
+For 2048 slices the integral is approximately 0.00014 with approximate error -2.40852e-05
+For 4096 slices the integral is approximately 0.00007 with approximate error -1.20426e-05
+For 8192 slices the integral is approximately 0.00004 with approximate error -6.02130e-06
+For 16384 slices the integral is approximately 0.00002 with approximate error -3.01065e-06
+For 32768 slices the integral is approximately 0.00001 with approximate error -1.50533e-06
+For 65536 slices the integral is approximately 0.00000 with approximate error -7.52663e-07
+It appears that the target accuracy is reached at 4096 slices"""
+
+n=8              
+
+# Recursion amount
+
+q = array([[0]*(n+1)]*(n+1),float)
+h = b-a
+q[0,0] =0.5*h*(f(a)+f(b))
+N = 1
+for J in range(1,n+1):
+    h = 0.5*h
+    sum = 0.0
+    N = 2*N
+    for k in range(1, N, 2):
+        sum = sum +f(a+k*h)        
+    q[J,0] = 0.5*q[J-1,0]+sum*h
+    M = 1                               
+    for g in range(1,J+1):
+        M = 4*M                     
+        q[J,g] = q[J,g-1] + (q[J,g-1]-q[J-1,g-1])/(M-1)
+    error=1/(M-1)*(q[J,g-1]-q[J-1,g-1])
+    
+    
+print(q)
+# Displays values in desired triangular array from page 161 of book
+
+print("Romberg integration converges to the required accuracy in {0} slices".format(N))
+
+""" Part b outputs Romberg method
+[[ 0.14797948  0.          0.          0.          0.          0.          0.
+   0.          0.        ]
+ [ 0.32523191  0.38431605  0.          0.          0.          0.          0.
+   0.          0.        ]
+ [ 0.51228285  0.57463317  0.58732097  0.          0.          0.          0.
+   0.          0.        ]
+ [ 0.40299745  0.36656898  0.35269804  0.34897386  0.          0.          0.
+   0.          0.        ]
+ [ 0.43010337  0.43913868  0.44397666  0.44542552  0.44580376  0.          0.
+   0.          0.        ]
+ [ 0.44841467  0.45451843  0.45554375  0.45572735  0.45576775  0.45577749
+   0.          0.          0.        ]
+ [ 0.45391293  0.45574569  0.4558275   0.45583201  0.45583242  0.45583248
+   0.45583249  0.          0.        ]
+ [ 0.4553485   0.45582703  0.45583245  0.45583253  0.45583253  0.45583253
+   0.45583253  0.45583253  0.        ]
+ [ 0.45571127  0.45583219  0.45583253  0.45583253  0.45583253  0.45583253
+   0.45583253  0.45583253  0.45583253]]
+Romberg integration converges to the required accuracy in 256 slices
+"""
